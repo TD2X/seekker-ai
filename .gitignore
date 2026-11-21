@@ -1,0 +1,23 @@
+# Maven
+**/target/
+.mvn/timing.properties
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Build files
+build/
+out/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
