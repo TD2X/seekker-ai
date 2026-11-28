@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: document-worker
+
+  # The worker's pom has spring-boot-starter-data-jpa + the PostgreSQL driver, so it needs a datasource
+  # (it will update document/job status). The schema is owned by api-service (Flyway): the worker never changes it.
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}/${DB_NAME:neondb}?sslmode=${DB_SSLMODE:require}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+# External S3-compatible object storage (Neon Object Storage). The worker only READS from it.
+# All values come from environment variables - never hardcode secrets here.
+storage:
+  s3:
+    endpoint: ${AWS_ENDPOINT_URL_S3}
+    region: ${AWS_REGION:eu-central-1}
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}
+    bucket: ${S3_BUCKET:seekker-pdfs}
+    path-style: true
+    connect-timeout: 3s
+    socket-timeout: 30s
+    attempt-timeout: 60s
+    call-timeout: 150s
+    max-idle-time: 5s
+    max-attempts: 3

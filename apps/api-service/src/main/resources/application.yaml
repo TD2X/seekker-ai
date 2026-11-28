@@ -1,0 +1,42 @@
+
+spring:
+  application:
+    name: api-service
+
+  datasource:
+    # DB_HOST includes the port when needed (e.g. localhost:5433).
+    # DB_SSLMODE: "require" for Neon (default), "disable" for a local Postgres.
+    url: jdbc:postgresql://${DB_HOST}/${DB_NAME:neondb}?sslmode=${DB_SSLMODE:require}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+  flyway:
+    locations: classpath:db/migration
+
+# External S3-compatible object storage (Neon Object Storage).
+# All values come from environment variables - never hardcode secrets here.
+storage:
+  s3:
+    endpoint: ${AWS_ENDPOINT_URL_S3}
+    region: ${AWS_REGION:eu-central-1}
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}
+    bucket: ${S3_BUCKET:seekker-pdfs}
+    path-style: true
+    connect-timeout: 3s
+    socket-timeout: 30s
+    attempt-timeout: 60s
+    call-timeout: 150s
+    max-idle-time: 5s
+    max-attempts: 3
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: 900000
