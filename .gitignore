@@ -21,3 +21,7 @@ out/
 # OS
 .DS_Store
 Thumbs.db
+.neon
+node_modules/
+node_modules/
+.neon
