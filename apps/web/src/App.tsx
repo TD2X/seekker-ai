@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import Background from './components/Background'
 import Composer from './components/Composer'
 import ChatView from './components/ChatView'
 import Sidebar, { SidebarToggleIcon } from './components/Sidebar'
@@ -32,6 +33,8 @@ export default function App() {
   }, [])
 
   return (
+    <>
+    <Background />
     <div className={`app${collapsed ? ' collapsed' : ''}`}>
       <Sidebar
         chats={chats}
@@ -77,5 +80,6 @@ export default function App() {
         )}
       </main>
     </div>
+    </>
   )
 }

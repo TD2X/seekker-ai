@@ -17,6 +17,17 @@
   --user-bubble: #e4e9ff;
   --assistant-card: #f6f7fd;
   --shadow: 0 4px 22px rgba(40, 55, 120, 0.1);
+
+  /* liquid glass */
+  --glass: rgba(255, 255, 255, 0.6);
+  --glass-soft: rgba(255, 255, 255, 0.45);
+  --glass-strong: rgba(255, 255, 255, 0.78);
+  --glass-filter: blur(10px) saturate(160%) brightness(1.15);
+  --glass-line: rgba(255, 255, 255, 0.45);
+  --glass-edge: rgba(255, 255, 255, 0.85);
+  --glass-edge-soft: rgba(255, 255, 255, 0.25);
+  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  --bg-overlay: rgba(255, 255, 255, 0);
 }
 
 :root[data-theme='dark'] {
@@ -37,6 +48,17 @@
   --user-bubble: #232a4d;
   --assistant-card: #181c28;
   --shadow: 0 4px 22px rgba(0, 0, 0, 0.45);
+
+  /* liquid glass */
+  --glass: rgba(14, 18, 26, 0.12);
+  --glass-soft: rgba(255, 255, 255, 0.06);
+  --glass-strong: rgba(18, 22, 32, 0.45);
+  --glass-filter: blur(8px) saturate(150%) brightness(1.25);
+  --glass-line: rgba(255, 255, 255, 0.12);
+  --glass-edge: rgba(255, 255, 255, 0.34);
+  --glass-edge-soft: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  --bg-overlay: rgba(4, 7, 12, 0);
 }
 
 /* ---------- base ---------- */
@@ -72,6 +94,60 @@ input:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* ---------- video background ---------- */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #1b1030;
+  pointer-events: none;
+}
+
+.bg-video {
+  --bg-blur: 3px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* scale hides the soft edges that blur creates at the borders */
+  transform: scale(1.08);
+  filter: blur(var(--bg-blur)) saturate(1.15);
+}
+
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-overlay);
+  transition: background-color 0.3s ease;
+}
+
+/* ---------- liquid glass surfaces ---------- */
+.sidebar-inner,
+.main {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, 0.06)),
+    var(--glass);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  border: 1px solid var(--glass-edge-soft);
+  border-radius: 24px;
+  /* specular edge: bright on the top-left, soft on the bottom-right */
+  box-shadow:
+    var(--glass-shadow),
+    inset 1.5px 1.5px 1px var(--glass-edge),
+    inset -1px -1px 1px var(--glass-edge-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .sidebar-inner,
+  .main {
+    background: var(--bg-main);
+  }
 }
 
 /* ---------- animations ---------- */
@@ -141,22 +217,27 @@ textarea:focus-visible {
 
 /* ---------- layout ---------- */
 .app {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 290px 1fr;
+  column-gap: 12px;
   height: 100vh;
+  padding: 12px;
   overflow: hidden;
-  transition: grid-template-columns 0.3s ease;
+  transition: grid-template-columns 0.3s ease, column-gap 0.3s ease;
 }
 
 .app.collapsed {
   grid-template-columns: 0 1fr;
+  column-gap: 0;
 }
 
 /* ---------- sidebar ---------- */
 .sidebar {
   min-width: 0;
   overflow: hidden;
-  background: var(--bg-side);
+  border-radius: 24px;
 }
 
 .sidebar-inner {
@@ -164,8 +245,6 @@ textarea:focus-visible {
   flex-direction: column;
   width: 290px;
   height: 100%;
-  background: var(--bg-side);
-  border-right: 1px solid var(--border-strong);
 }
 
 .brand {
@@ -173,7 +252,7 @@ textarea:focus-visible {
   align-items: center;
   gap: 10px;
   padding: 14px 12px 14px 16px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--glass-line);
 }
 
 .brand-name {
@@ -188,7 +267,7 @@ textarea:focus-visible {
   flex-direction: column;
   gap: 10px;
   padding: 14px 12px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--glass-line);
 }
 
 .new-chat {
@@ -241,9 +320,9 @@ textarea:focus-visible {
 .search input {
   width: 100%;
   padding: 9px 12px 9px 34px;
-  background: var(--surface);
+  background: var(--glass-soft);
   color: var(--text);
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--glass-line);
   border-radius: 10px;
   font: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -287,8 +366,8 @@ textarea:focus-visible {
 .history-item {
   width: 100%;
   padding: 9px 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--glass-soft);
+  border: 1px solid var(--glass-line);
   border-radius: 10px;
   text-align: left;
   white-space: nowrap;
@@ -299,8 +378,8 @@ textarea:focus-visible {
 }
 
 .history-item:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-strong);
+  background: var(--glass-strong);
+  border-color: var(--glass-edge);
   transform: translateX(2px);
 }
 
@@ -322,7 +401,7 @@ textarea:focus-visible {
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  background: var(--bg-main);
+  overflow: hidden;
 }
 
 .topbar {
@@ -332,7 +411,7 @@ textarea:focus-visible {
   gap: 12px;
   height: 60px;
   padding: 0 16px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--glass-line);
 }
 
 .topbar-left {
@@ -363,9 +442,9 @@ textarea:focus-visible {
 }
 
 .icon-button:hover {
-  background: var(--bg-hover);
+  background: var(--glass-strong);
   color: var(--text);
-  border-color: var(--border);
+  border-color: var(--glass-edge-soft);
 }
 
 .icon-button:active {
@@ -410,8 +489,7 @@ textarea:focus-visible {
   display: flex;
   justify-content: center;
   padding: 12px 24px 24px;
-  border-top: 1px solid var(--border);
-  background: var(--bg-main);
+  border-top: 1px solid var(--glass-line);
 }
 
 .composer-dock .composer {
@@ -424,16 +502,16 @@ textarea:focus-visible {
   flex-direction: column;
   gap: 8px;
   padding: 14px 14px 10px 16px;
-  background: var(--surface);
-  border: 1.5px solid var(--border-strong);
+  background: var(--glass-strong);
+  border: 1.5px solid var(--glass-edge-soft);
   border-radius: 22px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), inset 1px 1px 1px var(--glass-edge);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .composer:focus-within {
   border-color: var(--accent);
-  box-shadow: var(--shadow), 0 0 0 3px var(--accent-soft);
+  box-shadow: var(--shadow), inset 1px 1px 1px var(--glass-edge), 0 0 0 3px var(--accent-soft);
 }
 
 .composer textarea {
@@ -459,7 +537,7 @@ textarea:focus-visible {
   align-items: center;
   justify-content: space-between;
   padding-top: 6px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--glass-line);
 }
 
 .attach {
@@ -508,8 +586,8 @@ textarea:focus-visible {
   align-items: center;
   gap: 12px;
   padding: 10px 10px 10px 12px;
-  background: var(--bg-main);
-  border: 1px solid var(--border);
+  background: var(--glass-soft);
+  border: 1px solid var(--glass-line);
   border-radius: 12px;
   animation: pop-in 0.25s ease both;
   transition: border-color 0.3s ease;
@@ -626,8 +704,8 @@ textarea:focus-visible {
   gap: 8px;
   max-width: 260px;
   padding: 4px 10px 4px 4px;
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
+  background: var(--glass-soft);
+  border: 1px solid var(--glass-line);
   border-radius: 8px;
   font-size: 13px;
 }
@@ -684,16 +762,18 @@ textarea:focus-visible {
 
 .message.user .bubble {
   padding: 10px 14px;
-  background: var(--user-bubble);
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: color-mix(in srgb, var(--user-bubble) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--glass-line));
   border-radius: 16px 16px 4px 16px;
+  box-shadow: inset 1px 1px 1px var(--glass-edge-soft);
 }
 
 .message.assistant .bubble {
   padding: 10px 14px;
-  background: var(--assistant-card);
-  border: 1px solid var(--border);
+  background: var(--glass-soft);
+  border: 1px solid var(--glass-line);
   border-radius: 16px 16px 16px 4px;
+  box-shadow: inset 1px 1px 1px var(--glass-edge-soft);
 }
 
 .bubble p {
@@ -733,6 +813,7 @@ textarea:focus-visible {
 @media (max-width: 720px) {
   .app {
     grid-template-columns: 250px 1fr;
+    padding: 8px;
   }
 
   .sidebar-inner {
