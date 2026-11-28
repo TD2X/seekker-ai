@@ -1,9 +1,6 @@
 package gr.hua.td2x.seekkerai.api.document.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
@@ -14,8 +11,9 @@ public class DocumentChunk {
     @Id
     private UUID id;
 
-    @Column(name = "document_id", nullable = false)
-    private UUID documentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "document_id", nullable = false)
+    private Document document;
 
     @Column(name = "chunk_index", nullable = false)
     private Integer chunkIndex;
@@ -34,5 +32,56 @@ public class DocumentChunk {
 
     protected DocumentChunk() {
         // Required by JPA
+    }
+    public UUID getId() {
+        return id;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
+
+    public Integer getChunkIndex() {
+        return chunkIndex;
+    }
+
+    public void setChunkIndex(Integer chunkIndex) {
+        this.chunkIndex = chunkIndex;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Integer getPageStart() {
+        return pageStart;
+    }
+
+    public void setPageStart(Integer pageStart) {
+        this.pageStart = pageStart;
+    }
+
+    public Integer getPageEnd() {
+        return pageEnd;
+    }
+
+    public void setPageEnd(Integer pageEnd) {
+        this.pageEnd = pageEnd;
+    }
+
+    public UUID getQdrantPointId() {
+        return qdrantPointId;
+    }
+
+    public void setQdrantPointId(UUID qdrantPointId) {
+        this.qdrantPointId = qdrantPointId;
     }
 }
