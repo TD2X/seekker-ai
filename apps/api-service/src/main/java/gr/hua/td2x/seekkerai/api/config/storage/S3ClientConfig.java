@@ -16,7 +16,7 @@ import java.net.URI;
 /**
  * Builds the S3 client with EXPLICIT timeouts and a BOUNDED retry policy.
  *
- * - connect/socket timeouts: fail fas+t if the storage is unreachable or silent.
+ * - connect/socket timeouts: fail fast if the storage is unreachable or silent.
  * - attempt timeout: limit of one HTTP attempt; call timeout: limit of the whole operation incl. retries.
  * - max-idle-time (+ reaper): drop pooled connections before the server closes them, because a stale
  *   keep-alive connection produced NoHttpResponseException in our smoke test.

@@ -1,6 +1,6 @@
-package src.main.java.gr.hua.td2x.seekkerai.api.messaging.port;
+package gr.hua.td2x.seekkerai.api.messaging.port;
 
-import src.main.java.gr.hua.td2x.seekkerai.api.messaging.model.DocumentProcessingRequestedEvent;
+import gr.hua.td2x.seekkerai.api.messaging.model.DocumentProcessingRequestedEvent;
 
 public interface MessagePublisherPort {
 

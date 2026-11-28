@@ -4,7 +4,9 @@ spring:
     name: api-service
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST}/${DB_NAME:neondb}?sslmode=require
+    # DB_HOST includes the port when needed (e.g. localhost:5433).
+    # DB_SSLMODE: "require" for Neon (default), "disable" for a local Postgres.
+    url: jdbc:postgresql://${DB_HOST}/${DB_NAME:neondb}?sslmode=${DB_SSLMODE:require}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
